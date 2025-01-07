@@ -1,13 +1,14 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom';
-
-const view = () => {
+import Navbar from './utilitycomponents/Navbar'
+const View = () => {
   return (
     <div>
-      <h1>hi im for user view</h1>
+      <Navbar/>
       {<Outlet/>}
+      <h1>hi im for user View</h1>
     </div>
   )
 }
 
-export default view;
+export default View;
