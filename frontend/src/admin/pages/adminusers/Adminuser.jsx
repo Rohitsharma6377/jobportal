@@ -58,34 +58,39 @@ const AdminUser = () => {
   };
 
   return (
-    <Container>
+    <Container maxWidth="lg">
       <Typography
         variant="h4"
         component="h1"
         align="center"
         gutterBottom
-        sx={{ marginBottom: "20px" }}
+        sx={{ marginBottom: "20px", fontWeight: "bold" }}
       >
         Admin User Management
       </Typography>
+
+      {/* Add User Button */}
       <Box display="flex" justifyContent="flex-end" mb={2}>
         <Button
           variant="contained"
           color="primary"
           startIcon={<AddIcon />}
           onClick={() => handleOpen()}
+          sx={{ boxShadow: 3 }}
         >
           Add User
         </Button>
       </Box>
-      <TableContainer component={Paper}>
+
+      {/* User Table */}
+      <TableContainer component={Paper} sx={{ boxShadow: 3 }}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell><b>Name</b></TableCell>
-              <TableCell><b>Email</b></TableCell>
-              <TableCell><b>Role</b></TableCell>
-              <TableCell><b>Actions</b></TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Name</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Email</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Role</TableCell>
+              <TableCell sx={{ fontWeight: "bold" }}>Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -98,6 +103,7 @@ const AdminUser = () => {
                   <IconButton
                     color="primary"
                     onClick={() => handleOpen(user)}
+                    sx={{ marginRight: 1 }}
                   >
                     <EditIcon />
                   </IconButton>
@@ -114,7 +120,7 @@ const AdminUser = () => {
         </Table>
       </TableContainer>
 
-      {/* Add/Edit Dialog */}
+      {/* Add/Edit User Dialog */}
       <Dialog open={open} onClose={handleClose} fullWidth>
         <DialogTitle>{editingUser ? "Edit User" : "Add User"}</DialogTitle>
         <DialogContent>
@@ -126,6 +132,7 @@ const AdminUser = () => {
             onChange={(e) =>
               setNewUser((prev) => ({ ...prev, name: e.target.value }))
             }
+            required
           />
           <TextField
             label="Email"
@@ -135,6 +142,8 @@ const AdminUser = () => {
             onChange={(e) =>
               setNewUser((prev) => ({ ...prev, email: e.target.value }))
             }
+            required
+            type="email"
           />
           <TextField
             label="Role"
@@ -144,6 +153,7 @@ const AdminUser = () => {
             onChange={(e) =>
               setNewUser((prev) => ({ ...prev, role: e.target.value }))
             }
+            required
           />
         </DialogContent>
         <DialogActions>

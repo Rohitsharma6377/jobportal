@@ -19,10 +19,13 @@ import {
   DialogTitle,
   TextField,
   Box,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
+import { green, blue, red, orange } from "@mui/material/colors";
 
 const AdminOrder = () => {
   const [orders, setOrders] = useState([
@@ -38,6 +41,10 @@ const AdminOrder = () => {
     product: "",
     status: "Ongoing",
   });
+
+  // Material-UI theme hook for responsiveness
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   // Handlers
   const handleOpen = (order = null) => {
@@ -78,7 +85,11 @@ const AdminOrder = () => {
         component="h1"
         align="center"
         gutterBottom
-        sx={{ marginBottom: "20px" }}
+        sx={{
+          marginBottom: "20px",
+          fontWeight: "bold",
+          color: theme.palette.primary.main,
+        }}
       >
         Admin Order Management
       </Typography>
@@ -88,13 +99,18 @@ const AdminOrder = () => {
           color="primary"
           startIcon={<AddIcon />}
           onClick={() => handleOpen()}
+          sx={{
+            backgroundColor: blue[500],
+            "&:hover": { backgroundColor: blue[700] },
+            boxShadow: 3,
+          }}
         >
           Add Order
         </Button>
       </Box>
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{ boxShadow: 3 }}>
         <Table>
-          <TableHead>
+          <TableHead sx={{ backgroundColor: theme.palette.grey[200] }}>
             <TableRow>
               <TableCell><b>Customer</b></TableCell>
               <TableCell><b>Product</b></TableCell>
@@ -104,7 +120,13 @@ const AdminOrder = () => {
           </TableHead>
           <TableBody>
             {orders.map((order) => (
-              <TableRow key={order.id}>
+              <TableRow
+                key={order.id}
+                sx={{
+                  "&:hover": { backgroundColor: theme.palette.grey[100] },
+                  transition: "background-color 0.3s",
+                }}
+              >
                 <TableCell>{order.customer}</TableCell>
                 <TableCell>{order.product}</TableCell>
                 <TableCell>
@@ -113,6 +135,19 @@ const AdminOrder = () => {
                     onChange={(e) =>
                       handleStatusChange(order.id, e.target.value)
                     }
+                    fullWidth
+                    sx={{
+                      backgroundColor:
+                        order.status === "Ongoing"
+                          ? green[200]
+                          : order.status === "Completed"
+                          ? blue[200]
+                          : red[200],
+                      "& .MuiSelect-icon": {
+                        color: order.status === "Ongoing" ? green[700] : 
+                               order.status === "Completed" ? blue[700] : red[700],
+                      },
+                    }}
                   >
                     <MenuItem value="Ongoing">Ongoing</MenuItem>
                     <MenuItem value="Completed">Completed</MenuItem>
@@ -123,12 +158,21 @@ const AdminOrder = () => {
                   <IconButton
                     color="primary"
                     onClick={() => handleOpen(order)}
+                    sx={{
+                      backgroundColor: green[100],
+                      "&:hover": { backgroundColor: green[200] },
+                      marginRight: 1,
+                    }}
                   >
                     <EditIcon />
                   </IconButton>
                   <IconButton
                     color="secondary"
                     onClick={() => handleDelete(order.id)}
+                    sx={{
+                      backgroundColor: red[100],
+                      "&:hover": { backgroundColor: red[200] },
+                    }}
                   >
                     <DeleteIcon />
                   </IconButton>
@@ -141,7 +185,9 @@ const AdminOrder = () => {
 
       {/* Add/Edit Dialog */}
       <Dialog open={open} onClose={handleClose} fullWidth>
-        <DialogTitle>{editingOrder ? "Edit Order" : "Add Order"}</DialogTitle>
+        <DialogTitle sx={{ backgroundColor: blue[500], color: "white" }}>
+          {editingOrder ? "Edit Order" : "Add Order"}
+        </DialogTitle>
         <DialogContent>
           <TextField
             label="Customer Name"
@@ -151,6 +197,9 @@ const AdminOrder = () => {
             onChange={(e) =>
               setNewOrder((prev) => ({ ...prev, customer: e.target.value }))
             }
+            sx={{
+              marginBottom: 2,
+            }}
           />
           <TextField
             label="Product"
@@ -160,6 +209,9 @@ const AdminOrder = () => {
             onChange={(e) =>
               setNewOrder((prev) => ({ ...prev, product: e.target.value }))
             }
+            sx={{
+              marginBottom: 2,
+            }}
           />
           <Select
             value={newOrder.status}
@@ -168,6 +220,9 @@ const AdminOrder = () => {
             onChange={(e) =>
               setNewOrder((prev) => ({ ...prev, status: e.target.value }))
             }
+            sx={{
+              marginBottom: 2,
+            }}
           >
             <MenuItem value="Ongoing">Ongoing</MenuItem>
             <MenuItem value="Completed">Completed</MenuItem>
@@ -175,10 +230,15 @@ const AdminOrder = () => {
           </Select>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="secondary">
+          <Button onClick={handleClose} color="secondary" sx={{ fontWeight: "bold" }}>
             Cancel
           </Button>
-          <Button onClick={handleSave} color="primary" variant="contained">
+          <Button
+            onClick={handleSave}
+            color="primary"
+            variant="contained"
+            sx={{ fontWeight: "bold", backgroundColor: blue[600] }}
+          >
             Save
           </Button>
         </DialogActions>

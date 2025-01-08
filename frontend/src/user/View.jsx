@@ -6,7 +6,6 @@ const View = () => {
     <div>
       <Navbar/>
       {<Outlet/>}
-      <h1>hi im for user View</h1>
     </div>
   )
 }
