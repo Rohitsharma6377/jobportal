@@ -12,6 +12,7 @@ import Dashboard from './admin/pages/dashboard/Dashboard.jsx';
 import Admin from './admin/admin.jsx';
 import AdminProducts from './admin/pages/product/AdminProducts.jsx';
 import Adminusers from './admin/pages/adminusers/Adminuser.jsx';
+import AdminOrder from './admin/pages/order/Adminorder.jsx';
 import Notfound from './user/pages/Notfound.jsx';
 
 createRoot(document.getElementById('root')).render(
@@ -20,6 +21,7 @@ createRoot(document.getElementById('root')).render(
       {/* Admin Routes */}
       <Route path='/admin' element={<Admin />}>
         <Route index element={<Dashboard />} />
+        <Route path='adminorder' element={<AdminOrder />} />
         <Route path='adminproducts' element={<AdminProducts />} />
         <Route path='adminusers' element={<Adminusers />} />
       </Route>
