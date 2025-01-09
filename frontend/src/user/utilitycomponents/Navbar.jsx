@@ -15,6 +15,13 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
+import Drawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemText from '@mui/material/ListItemText';
+import HomeIcon from '@mui/icons-material/Home';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import StorefrontIcon from '@mui/icons-material/Storefront';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -46,7 +53,6 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   color: 'inherit',
   '& .MuiInputBase-input': {
     padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create('width'),
     width: '100%',
@@ -59,9 +65,15 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 export default function PrimarySearchAppBar() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const [drawerOpen, setDrawerOpen] = React.useState(false);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  // Define the toggleDrawer function
+  const toggleDrawer = () => {
+    setDrawerOpen(!drawerOpen);
+  };
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -154,6 +166,29 @@ export default function PrimarySearchAppBar() {
     </Menu>
   );
 
+  const drawerList = (
+    <List>
+      <ListItem button>
+        <IconButton edge="start" color="inherit" aria-label="home">
+          <HomeIcon />
+        </IconButton>
+        <ListItemText primary="Home" />
+      </ListItem>
+      <ListItem button>
+        <IconButton edge="start" color="inherit" aria-label="cart">
+          <ShoppingCartIcon />
+        </IconButton>
+        <ListItemText primary="Cart" />
+      </ListItem>
+      <ListItem button>
+        <IconButton edge="start" color="inherit" aria-label="products">
+          <StorefrontIcon />
+        </IconButton>
+        <ListItemText primary="Products" />
+      </ListItem>
+    </List>
+  );
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -164,6 +199,7 @@ export default function PrimarySearchAppBar() {
             color="inherit"
             aria-label="open drawer"
             sx={{ mr: 2 }}
+            onClick={toggleDrawer} // This now works
           >
             <MenuIcon />
           </IconButton>
@@ -228,6 +264,13 @@ export default function PrimarySearchAppBar() {
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
+      <Drawer
+        anchor="left"
+        open={drawerOpen}
+        onClose={toggleDrawer}
+      >
+        {drawerList}
+      </Drawer>
     </Box>
   );
 }

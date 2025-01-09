@@ -1,75 +1,35 @@
-import React, { useState } from 'react';
-import { Container, TextField, Button, Typography, Box, Link, Grid } from '@mui/material';
-import { useNavigate } from 'react-router-dom';  // Updated import
+import * as React from 'react';
+import { AppProvider } from '@toolpad/core/AppProvider';
+import { SignInPage } from '@toolpad/core/SignInPage';
+import { useTheme } from '@mui/material/styles';
 
-const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate();  // Updated hook
+// preview-start
+const providers = [{ id: 'credentials', name: 'Email and Password' }];
+// preview-end
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle form submission logic here (e.g., authentication)
-    console.log("Login submitted:", { email, password });
-  };
-
-  const handleRegisterRedirect = () => {
-    // Redirect to the Register page
-    navigate('/register');  // Updated navigation method
-  };
-
-  return (
-    <Container maxWidth="xs" sx={{ padding: 3 }}>
-      <Box sx={{ textAlign: 'center', marginBottom: 3 }}>
-        <Typography variant="h5" color="primary" gutterBottom>
-          Login to Your Account
-        </Typography>
-      </Box>
-
-      <form onSubmit={handleSubmit}>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <TextField
-              label="Email"
-              variant="outlined"
-              fullWidth
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </Grid>
-          
-          <Grid item xs={12}>
-            <TextField
-              label="Password"
-              variant="outlined"
-              fullWidth
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </Grid>
-
-          <Grid item xs={12}>
-            <Button type="submit" variant="contained" color="primary" fullWidth>
-              Login
-            </Button>
-          </Grid>
-        </Grid>
-      </form>
-
-      <Box sx={{ marginTop: 2, textAlign: 'center' }}>
-        <Typography variant="body2" color="textSecondary">
-          Don't have an account?{' '}
-          <Link onClick={handleRegisterRedirect} style={{ cursor: 'pointer' }}>
-            Register Here
-          </Link>
-        </Typography>
-      </Box>
-    </Container>
-  );
+const signIn = async (provider, formData) => {
+  const promise = new Promise((resolve) => {
+    setTimeout(() => {
+      alert(
+        `Signing in with "${provider.name}" and credentials: ${formData.get('email')}, ${formData.get('password')}`,
+      );
+      resolve();
+    }, 300);
+  });
+  return promise;
 };
 
-export default Login;
+export default function CredentialsSignInPage() {
+  const theme = useTheme();
+  return (
+    // preview-start
+    <AppProvider theme={theme}>
+      <SignInPage
+        signIn={signIn}
+        providers={providers}
+        slotProps={{ emailField: { autoFocus: false } }}
+      />
+    </AppProvider>
+    // preview-end
+  );
+}

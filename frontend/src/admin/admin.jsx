@@ -1,79 +1,128 @@
-import React, { useState } from 'react';
-import { Outlet } from 'react-router-dom';
-import { Drawer, AppBar, Toolbar, IconButton, Typography, Box, List, ListItem, ListItemText, Divider, Button } from '@mui/material';
-import { Menu as MenuIcon } from '@mui/icons-material';
+import * as React from 'react';
+import PropTypes from 'prop-types';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import { createTheme } from '@mui/material/styles';
+import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import { AppProvider } from '@toolpad/core/AppProvider';
+import { DashboardLayout } from '@toolpad/core/DashboardLayout';
 
-const Admin = () => {
-  // State to handle drawer open/close
-  const [open, setOpen] = useState(false);
+const NAVIGATION = [
+  {
+    segment: 'dashboard',
+    title: 'Dashboard',
+    icon: <DashboardIcon />,
+    path: '/admin', // Root path for the dashboard
+  },
+  {
+    segment: 'users',
+    title: 'Users',
+    icon: <DashboardIcon />,
+    path: '/admin/users',
+  },
+  {
+    segment: 'products',
+    title: 'Products',
+    icon: <DashboardIcon />,
+    path: '/admin/products',
+  },
+  {
+    segment: 'orders',
+    title: 'Orders',
+    icon: <DashboardIcon />,
+    path: '/admin/orders',
+  },
+];
 
-  // Toggle Drawer
-  const toggleDrawer = () => {
-    setOpen(!open);
-  };
+const demoTheme = createTheme({
+  cssVariables: {
+    colorSchemeSelector: 'data-toolpad-color-scheme',
+  },
+  colorSchemes: { light: true, dark: true },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 600,
+      lg: 1200,
+      xl: 1536,
+    },
+  },
+});
 
+function DemoPageContent() {
   return (
-    <Box sx={{ display: 'flex' }}>
-      {/* AppBar */}
-      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            edge="start"
-            onClick={toggleDrawer}
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Admin Dashboard
-          </Typography>
-          <Button color="inherit">Logout</Button>
-        </Toolbar>
-      </AppBar>
-
-      {/* Sidebar Drawer */}
-      <Drawer
-        sx={{
-          width: 240,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
-            width: 240,
-            boxSizing: 'border-box',
-          },
-        }}
-        variant="temporary"
-        open={open}
-        onClose={toggleDrawer}
-        ModalProps={{
-          keepMounted: true, // Better performance on mobile.
-        }}
-      >
-        <Box sx={{ width: 250 }}>
-          <List>
-            <ListItem button>
-              <ListItemText primary="Dashboard" />
-            </ListItem>
-            <Divider />
-            <ListItem button>
-              <ListItemText primary="Users" />
-            </ListItem>
-            <ListItem button>
-              <ListItemText primary="Settings" />
-            </ListItem>
-          </List>
-        </Box>
-      </Drawer>
-
-      {/* Main Content */}
-      <Box
-        component="main"
-        sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3, marginTop: '64px' }}
-      >
-        <Outlet />
-      </Box>
+    <Box
+      sx={{
+        py: 4,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        textAlign: 'center',
+      }}
+    >
+      <Outlet />
     </Box>
   );
+}
+
+function DashboardLayoutAccount({ window }) {
+  const [session, setSession] = React.useState({
+    user: {
+      name: 'Bharat Kashyap',
+      email: 'bharatkashyap@outlook.com',
+      image: 'https://avatars.githubusercontent.com/u/19550456',
+    },
+  });
+
+  const authentication = React.useMemo(() => ({
+    signIn: () => {
+      setSession({
+        user: {
+          name: 'Bharat Kashyap',
+          email: 'bharatkashyap@outlook.com',
+          image: 'https://avatars.githubusercontent.com/u/19550456',
+        },
+      });
+    },
+    signOut: () => {
+      setSession(null);
+    },
+  }), []);
+
+  const demoWindow = window !== undefined ? window() : undefined;
+
+  return (
+    <AppProvider
+      session={session}
+      authentication={authentication}
+      navigation={NAVIGATION}
+      theme={demoTheme}
+      window={demoWindow}
+    >
+      <DashboardLayout>
+        <Routes>
+          <Route path="/admin" element={<DemoPageContent />}>
+            <Route index element={<Typography>Welcome to the Dashboard!</Typography>} />
+            <Route path="users" element={<Typography>User Management Page</Typography>} />
+            <Route path="products" element={<Typography>Product Management Page</Typography>} />
+            <Route path="orders" element={<Typography>Order Management Page</Typography>} />
+          </Route>
+          {/* Redirect to /admin for any unmatched paths */}
+          <Route path="*" element={<Navigate to="/admin" replace />} />
+        </Routes>
+      </DashboardLayout>
+    </AppProvider>
+  );
+}
+
+DashboardLayoutAccount.propTypes = {
+  /**
+   * Injected by the documentation to work in an iframe.
+   * Remove this when copying and pasting into your project.
+   */
+  window: PropTypes.func,
 };
 
-export default Admin;
+export default DashboardLayoutAccount;

@@ -86,6 +86,7 @@ const Dashboard = () => {
 
     const newTasks = Array.from(tasks);
     const [removed] = newTasks.splice(source.index, 1);
+    removed.status = destination.droppableId; // Update task status when moved
     newTasks.splice(destination.index, 0, removed);
     setTasks(newTasks);
   };
@@ -158,7 +159,7 @@ const Dashboard = () => {
           </Button>
           <DragDropContext onDragEnd={handleDragEnd}>
             <Grid container spacing={2} mt={3}>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <Typography variant="h6">Ongoing</Typography>
                 <Droppable droppableId="ongoing">
                   {(provided) => (
@@ -194,7 +195,7 @@ const Dashboard = () => {
                   )}
                 </Droppable>
               </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} sm={6}>
                 <Typography variant="h6">Completed</Typography>
                 <Droppable droppableId="completed">
                   {(provided) => (
